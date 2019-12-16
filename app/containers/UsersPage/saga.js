@@ -1,9 +1,9 @@
-import { takeEvery, call, fork, put } from 'redux-saga/effects';
+import { takeEvery, call, put } from 'redux-saga/effects';
 import { GET_USERS_REQUEST } from './constants';
 import * as actions from './actions';
 import * as api from './userApi';
 
-function* getUsers() {
+export function* getUsers() {
   try {
     const result = yield call(api.getUsers);
     // dispatch action
@@ -17,10 +17,6 @@ function* getUsers() {
   }
 }
 
-function* watchGetUsersRequest() {
+export default function* watchGetUsersRequest() {
   yield takeEvery(GET_USERS_REQUEST, getUsers);
 }
-
-const usersSagas = [fork(watchGetUsersRequest)];
-
-export default usersSagas;
