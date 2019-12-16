@@ -1,5 +1,6 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
 import { ListGroup, ListGroupItem, Button } from 'reactstrap';
+import PropTypes from 'prop-types';
 
 function UserList(props) {
   return (
