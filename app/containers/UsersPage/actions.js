@@ -6,7 +6,7 @@ export function getUsersRequest() {
   };
 }
 
-export const getUsersSuccess = ({ items }) => ({
+export const getUsersSuccess = ({ users }) => ({
   type: GET_USERS_SUCCESS,
-  payload: { items },
+  payload: { users },
 });

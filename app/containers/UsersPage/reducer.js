@@ -1,24 +1,42 @@
 // The initial state of the App
-import produce from 'immer';
-import { GET_USERS_REQUEST } from './constants';
+// import produce from 'immer';
+import { combineReducers } from 'redux';
+import { GET_USERS_SUCCESS } from './constants';
 
 export const initialState = {
-  items: [],
+  users: [],
   // error: '',
 };
 
-const usersReducer = (state = initialState, action) =>
-  produce(state, draft => {
-    switch (action.type) {
-      case GET_USERS_REQUEST:
-        draft.items = [...state, action.payload.items];
-        // draft.items = state.concat(action.payload.items);
-        break;
-
-      default: {
-        return state;
-      }
+function usersReducer(state = initialState, action) {
+  switch (action.type) {
+    case GET_USERS_SUCCESS: {
+      return {
+        ...state,
+        users: action.payload.users,
+      };
     }
-  });
 
-export default usersReducer;
+    default: {
+      return state;
+    }
+  }
+}
+// produce(state, draft => {
+//   switch (action.type) {
+//     case GET_USERS_REQUEST:
+//       draft.items = [...state, action.payload.items];
+//       // draft.items = state.concat(action.payload.items);
+//       break;
+
+//     default: {
+//       return state;
+//     }
+//   }
+// });
+
+// export default usersReducer;
+
+export default combineReducers({
+  users: usersReducer,
+});
