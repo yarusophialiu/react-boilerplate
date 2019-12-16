@@ -1,6 +1,6 @@
 import { GET_USERS_REQUEST, GET_USERS_SUCCESS } from './constants';
 
-export function getUsers() {
+export function getUsersRequest() {
   return {
     type: GET_USERS_REQUEST,
   };
