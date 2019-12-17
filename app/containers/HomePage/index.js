@@ -46,12 +46,13 @@ export function HomePage({
   repos,
   onSubmitForm,
   onChangeUsername,
+  ondeleteUserRequest,
 }) {
   useInjectReducer({ key, reducer });
-  console.log('home', saga);
   useInjectSaga({ key, saga });
 
   const [users, setUsers] = useState([]);
+  // const dispatch = useDispatch();
 
   useEffect(() => {
     axios
@@ -74,8 +75,7 @@ export function HomePage({
   }, []);
 
   const handleDeleteUserClick = userId => {
-    console.log('delete', deleteUserRequest(userId));
-    deleteUserRequest(userId);
+    ondeleteUserRequest(userId);
   };
 
   const reposListProps = {
@@ -137,6 +137,7 @@ HomePage.propTypes = {
   makeSelectUsers: PropTypes.func,
   username: PropTypes.string,
   onChangeUsername: PropTypes.func,
+  ondeleteUserRequest: PropTypes.func,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -155,7 +156,7 @@ export function mapDispatchToProps(dispatch) {
       if (evt !== undefined && evt.preventDefault) evt.preventDefault();
       dispatch(loadRepos());
     },
-    deleteUserRequest,
+    ondeleteUserRequest: userId => dispatch(deleteUserRequest(userId)),
   };
 }
 

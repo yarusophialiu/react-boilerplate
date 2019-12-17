@@ -43,16 +43,21 @@ export function* githubData() {
 
 export function* deleteUser({ userId }) {
   try {
+    console.log('hi2', userId);
     yield call(api.deleteUser, userId);
     // yield call(getUsers);
+    yield put({ type: 'DELETE_USER_SUCCESS', payload: { userId } });
   } catch (e) {
     console.log(e);
   }
 }
 
 export function* watchDeleteUserRequest() {
+  // console.log('hi1');
+  // yield takeLatest(DELETE_USER_REQUEST, deleteUser);
   // yield takeLatest(DELETE_USER_REQUEST, getRepos);
   while (true) {
+    console.log('hi1');
     const action = yield take(DELETE_USER_REQUEST);
     yield call(deleteUser, {
       userId: action.payload.userId,
