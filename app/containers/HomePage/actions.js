@@ -15,7 +15,7 @@
  *    }
  */
 
-import { CHANGE_USERNAME } from './constants';
+import { CHANGE_USERNAME, DELETE_USER_REQUEST } from './constants';
 
 /**
  * Changes the input field of the form
@@ -30,3 +30,10 @@ export function changeUsername(username) {
     username,
   };
 }
+
+export const deleteUserRequest = userId => ({
+  type: DELETE_USER_REQUEST,
+  payload: {
+    userId,
+  },
+});

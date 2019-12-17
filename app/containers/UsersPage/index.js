@@ -9,7 +9,7 @@ import { createStructuredSelector } from 'reselect';
 import { useInjectReducer } from 'utils/injectReducer';
 import { useInjectSaga } from 'utils/injectSaga';
 
-import { getUsersRequest } from './actions';
+import { deleteUserRequest } from './actions';
 import { makeSelectUsers } from './selectors';
 import UserList from './UserList';
 import reducer from './reducer';
@@ -19,6 +19,7 @@ const key = 'users';
 
 export function Users() {
   useInjectReducer({ key, reducer });
+  console.log('saga', saga)
   useInjectSaga({ key, saga });
 
   // useEffect(() => {
@@ -26,6 +27,11 @@ export function Users() {
   // }, []);
 
   const [users, setUsers] = useState([]);
+
+  const handleDeleteUserClick = userId => {
+    console.log('delete', deleteUserRequest(userId));
+    deleteUserRequest(userId);
+  };
 
   useEffect(() => {
     axios
@@ -47,8 +53,7 @@ export function Users() {
           content="A React.js Boilerplate application homepage"
         />
       </Helmet>
-      
-      <UserList users={users} />
+      <UserList users={users} onDeleteUser={handleDeleteUserClick} />
     </div>
   );
 }
@@ -64,7 +69,7 @@ const mapStateToProps = createStructuredSelector({
 const withConnect = connect(
   mapStateToProps,
   {
-    getUsersRequest,
+    deleteUserRequest,
   },
 );
 

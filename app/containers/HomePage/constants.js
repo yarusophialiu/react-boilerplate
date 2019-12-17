@@ -10,3 +10,4 @@
  */
 
 export const CHANGE_USERNAME = 'boilerplate/Home/CHANGE_USERNAME';
+export const DELETE_USER_REQUEST = 'boilerplate/User/DELETE_USER_REQUEST';

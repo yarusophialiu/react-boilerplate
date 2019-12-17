@@ -4,12 +4,13 @@
  * This is the first thing users see of our App, at the '/' route
  */
 
-import React, { useEffect, memo } from 'react';
+import React, { useEffect, memo, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Helmet } from 'react-helmet';
 import { FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
+import axios from 'axios';
 import { createStructuredSelector } from 'reselect';
 
 import { useInjectReducer } from 'utils/injectReducer';
@@ -28,10 +29,13 @@ import Input from './Input';
 import Section from './Section';
 import messages from './messages';
 import { loadRepos } from '../App/actions';
-import { changeUsername } from './actions';
+import { changeUsername, deleteUserRequest } from './actions';
 import { makeSelectUsername } from './selectors';
+import { makeSelectUsers } from '../UsersPage/selectors';
+import { getUsersRequest } from '../UsersPage/actions';
 import reducer from './reducer';
 import saga from './saga';
+import UserList from '../UsersPage/UserList';
 
 const key = 'home';
 
@@ -44,12 +48,35 @@ export function HomePage({
   onChangeUsername,
 }) {
   useInjectReducer({ key, reducer });
+  console.log('home', saga);
   useInjectSaga({ key, saga });
+
+  const [users, setUsers] = useState([]);
+
+  useEffect(() => {
+    axios
+      .get('https://rem-rest-api.herokuapp.com/api/users', {
+        params: {
+          limit: 1000,
+        },
+      })
+      .then(({ data }) => {
+        setUsers(data.data);
+      });
+  }, []);
 
   useEffect(() => {
     // When initial state username is not null, submit the form to load repos
-    if (username && username.trim().length > 0) onSubmitForm();
+    if (username && username.trim().length > 0) {
+      // console.log('hhu', getUsersRequest());
+      onSubmitForm();
+    }
   }, []);
+
+  const handleDeleteUserClick = userId => {
+    console.log('delete', deleteUserRequest(userId));
+    deleteUserRequest(userId);
+  };
 
   const reposListProps = {
     loading,
@@ -67,6 +94,7 @@ export function HomePage({
         />
       </Helmet>
       <div>
+        <UserList users={users} onDeleteUser={handleDeleteUserClick} />
         <CenteredSection>
           <H2>
             <FormattedMessage {...messages.startProjectHeader} />
@@ -106,6 +134,7 @@ HomePage.propTypes = {
   error: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
   repos: PropTypes.oneOfType([PropTypes.array, PropTypes.bool]),
   onSubmitForm: PropTypes.func,
+  makeSelectUsers: PropTypes.func,
   username: PropTypes.string,
   onChangeUsername: PropTypes.func,
 };
@@ -113,6 +142,7 @@ HomePage.propTypes = {
 const mapStateToProps = createStructuredSelector({
   repos: makeSelectRepos(),
   username: makeSelectUsername(),
+  users: makeSelectUsers(),
   loading: makeSelectLoading(),
   error: makeSelectError(),
 });
@@ -120,10 +150,12 @@ const mapStateToProps = createStructuredSelector({
 export function mapDispatchToProps(dispatch) {
   return {
     onChangeUsername: evt => dispatch(changeUsername(evt.target.value)),
+    getUsersRequest: () => dispatch(getUsersRequest()),
     onSubmitForm: evt => {
       if (evt !== undefined && evt.preventDefault) evt.preventDefault();
       dispatch(loadRepos());
     },
+    deleteUserRequest,
   };
 }
 
