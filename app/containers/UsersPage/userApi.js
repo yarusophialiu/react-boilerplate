@@ -8,3 +8,5 @@ export const getUsers = () => {
     },
   });
 };
+
+export const deleteUser = userId => axios.delete(`/users/${userId}`);

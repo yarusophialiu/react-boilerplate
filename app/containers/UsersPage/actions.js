@@ -1,4 +1,8 @@
-import { GET_USERS_REQUEST, GET_USERS_SUCCESS } from './constants';
+import {
+  GET_USERS_REQUEST,
+  GET_USERS_SUCCESS,
+  DELETE_USER_REQUEST,
+} from './constants';
 
 export function getUsersRequest() {
   return {
@@ -9,4 +13,11 @@ export function getUsersRequest() {
 export const getUsersSuccess = ({ users }) => ({
   type: GET_USERS_SUCCESS,
   payload: { users },
+});
+
+export const deleteUserRequest = userId => ({
+  type: DELETE_USER_REQUEST,
+  payload: {
+    userId,
+  },
 });
