@@ -1,5 +1,5 @@
 import React from 'react';
-import { ListGroup, ListGroupItem, Button } from 'reactstrap';
+import { ListGroup, ListGroupItem } from 'reactstrap';
 import PropTypes from 'prop-types';
 
 function UserList(props) {
@@ -12,7 +12,7 @@ function UserList(props) {
               <div style={{ flexGrow: 1 }}>
                 {user.firstName} {user.lastName}
               </div>
-              <div>
+              {/* <div>
                 <Button
                   outline
                   color="danger"
@@ -20,7 +20,7 @@ function UserList(props) {
                 >
                   Delete
                 </Button>
-              </div>
+              </div> */}
             </section>
           </ListGroupItem>
         );
