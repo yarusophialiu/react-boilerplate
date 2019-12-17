@@ -4,13 +4,12 @@
  * This is the first thing users see of our App, at the '/' route
  */
 
-import React, { useEffect, memo, useState } from 'react';
+import React, { useEffect, memo } from 'react';
 import PropTypes from 'prop-types';
 import { Helmet } from 'react-helmet';
 import { FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
-import axios from 'axios';
 import { createStructuredSelector } from 'reselect';
 
 import { useInjectReducer } from 'utils/injectReducer';
@@ -29,10 +28,9 @@ import Input from './Input';
 import Section from './Section';
 import messages from './messages';
 import { loadRepos } from '../App/actions';
-import { changeUsername, deleteUserRequest } from './actions';
+import { changeUsername, deleteUserRequest, getUsersRequest } from './actions';
 import { makeSelectUsername } from './selectors';
 import { makeSelectUsers } from '../UsersPage/selectors';
-import { getUsersRequest } from '../UsersPage/actions';
 import reducer from './reducer';
 import saga from './saga';
 import UserList from '../UsersPage/UserList';
@@ -44,32 +42,22 @@ export function HomePage({
   loading,
   error,
   repos,
+  users,
   onSubmitForm,
   onChangeUsername,
   ondeleteUserRequest,
+  ongetUsersRequest,
 }) {
   useInjectReducer({ key, reducer });
   useInjectSaga({ key, saga });
 
-  const [users, setUsers] = useState([]);
-  // const dispatch = useDispatch();
-
   useEffect(() => {
-    axios
-      .get('https://rem-rest-api.herokuapp.com/api/users', {
-        params: {
-          limit: 1000,
-        },
-      })
-      .then(({ data }) => {
-        setUsers(data.data);
-      });
+    ongetUsersRequest();
   }, []);
 
   useEffect(() => {
     // When initial state username is not null, submit the form to load repos
     if (username && username.trim().length > 0) {
-      // console.log('hhu', getUsersRequest());
       onSubmitForm();
     }
   }, []);
@@ -133,11 +121,13 @@ HomePage.propTypes = {
   loading: PropTypes.bool,
   error: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
   repos: PropTypes.oneOfType([PropTypes.array, PropTypes.bool]),
+  users: PropTypes.array,
   onSubmitForm: PropTypes.func,
   makeSelectUsers: PropTypes.func,
   username: PropTypes.string,
   onChangeUsername: PropTypes.func,
   ondeleteUserRequest: PropTypes.func,
+  ongetUsersRequest: PropTypes.func,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -157,6 +147,7 @@ export function mapDispatchToProps(dispatch) {
       dispatch(loadRepos());
     },
     ondeleteUserRequest: userId => dispatch(deleteUserRequest(userId)),
+    ongetUsersRequest: () => dispatch(getUsersRequest()),
   };
 }
 

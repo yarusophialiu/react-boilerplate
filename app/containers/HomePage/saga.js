@@ -23,7 +23,6 @@ import { DELETE_USER_REQUEST, GET_USERS_REQUEST } from './constants';
  * Github repos request/response handler
  */
 export function* getRepos() {
-  console.log('run');
   // Select username from store
   const username = yield select(makeSelectUsername());
   const requestURL = `https://api.github.com/users/${username}/repos?type=all&sort=updated`;
@@ -41,7 +40,6 @@ export function* getRepos() {
  * Root saga manages watcher lifecycle
  */
 export function* githubData() {
-  console.log('watch');
   // Watches for LOAD_REPOS actions and calls getRepos when one comes in.
   // By using `takeLatest` only the result of the latest API call is applied.
   // It returns task descriptor (just like fork) so we can continue execution
@@ -54,7 +52,7 @@ export function* getUsers() {
     const results = yield call(api.getUsers);
     yield put({ type: 'GET_USERS_SUCCESS', payload: results.data });
   } catch (e) {
-    console.log(e);
+    // console.log(e);
   }
 }
 
@@ -64,19 +62,15 @@ export function* watchGetUserRequest() {
 
 export function* deleteUser({ userId }) {
   try {
-    const result = yield call(api.deleteUser, userId);
-    // yield call(getUsers);
-    console.log(result);
-    yield put({ type: 'DELETE_USER_SUCCESS', payload: { userId } });
+    yield call(api.deleteUser, userId);
+    // yield put({ type: 'DELETE_USER_SUCCESS', payload: { userId } });
+    yield call(getUsers);
   } catch (e) {
-    console.log(e);
+    // console.log(e);
   }
 }
 
 export function* watchDeleteUserRequest() {
-  // console.log('hi1');
-  // yield takeLatest(DELETE_USER_REQUEST, deleteUser);
-  // yield takeLatest(DELETE_USER_REQUEST, getRepos);
   while (true) {
     const action = yield take(DELETE_USER_REQUEST);
     yield call(deleteUser, {

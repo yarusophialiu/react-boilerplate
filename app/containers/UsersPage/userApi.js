@@ -1,11 +1,13 @@
 import axios from 'axios';
 
+axios.defaults.withCredentials = true;
+axios.defaults.baseURL = 'https://rem-rest-api.herokuapp.com/api';
+
 export const getUsers = () =>
-  axios.get('https://rem-rest-api.herokuapp.com/api/users', {
+  axios.get('/users', {
     params: {
       limit: 1000,
     },
   });
 
-export const deleteUser = userId =>
-  axios.delete(`https://rem-rest-api.herokuapp.com/api/users/${userId}`);
+export const deleteUser = userId => axios.delete(`/users/${userId}`);

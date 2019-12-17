@@ -28,7 +28,7 @@ function UserList(props) {
 }
 
 UserList.propTypes = {
-  users: PropTypes.array.isRequired,
+  users: PropTypes.array,
   onDeleteUser: PropTypes.func,
 };
 
