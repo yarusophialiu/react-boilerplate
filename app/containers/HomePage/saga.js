@@ -2,14 +2,22 @@
  * Gets the repositories of the user from Github
  */
 
-import { call, put, select, takeLatest, all, take } from 'redux-saga/effects';
+import {
+  call,
+  put,
+  select,
+  takeLatest,
+  all,
+  take,
+  takeEvery,
+} from 'redux-saga/effects';
 import { LOAD_REPOS } from 'containers/App/constants';
 import { reposLoaded, repoLoadingError } from 'containers/App/actions';
 
 import request from 'utils/request';
 import { makeSelectUsername } from 'containers/HomePage/selectors';
 import * as api from '../UsersPage/userApi';
-import { DELETE_USER_REQUEST } from './constants';
+import { DELETE_USER_REQUEST, GET_USERS_REQUEST } from './constants';
 
 /**
  * Github repos request/response handler
@@ -41,11 +49,24 @@ export function* githubData() {
   yield takeLatest(LOAD_REPOS, getRepos);
 }
 
+export function* getUsers() {
+  try {
+    const results = yield call(api.getUsers);
+    yield put({ type: 'GET_USERS_SUCCESS', payload: results.data });
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+export function* watchGetUserRequest() {
+  yield takeEvery(GET_USERS_REQUEST, getUsers);
+}
+
 export function* deleteUser({ userId }) {
   try {
-    console.log('hi2', userId);
-    yield call(api.deleteUser, userId);
+    const result = yield call(api.deleteUser, userId);
     // yield call(getUsers);
+    console.log(result);
     yield put({ type: 'DELETE_USER_SUCCESS', payload: { userId } });
   } catch (e) {
     console.log(e);
@@ -57,7 +78,6 @@ export function* watchDeleteUserRequest() {
   // yield takeLatest(DELETE_USER_REQUEST, deleteUser);
   // yield takeLatest(DELETE_USER_REQUEST, getRepos);
   while (true) {
-    console.log('hi1');
     const action = yield take(DELETE_USER_REQUEST);
     yield call(deleteUser, {
       userId: action.payload.userId,
@@ -66,5 +86,5 @@ export function* watchDeleteUserRequest() {
 }
 
 export default function* rootSaga() {
-  yield all([githubData(), watchDeleteUserRequest()]);
+  yield all([githubData(), watchGetUserRequest(), watchDeleteUserRequest()]);
 }

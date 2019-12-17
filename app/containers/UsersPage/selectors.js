@@ -3,13 +3,14 @@
  */
 
 import { createSelector } from 'reselect';
-import { initialState } from './reducer';
+import { initialState } from '../HomePage/reducer';
 
-const selectUsers = state => state.users || initialState;
+const selectUsers = state => state.home || initialState;
 
 const makeSelectUsers = () =>
   createSelector(
     selectUsers,
+    // usersstate is the result of selectUsers
     usersState => usersState.users,
   );
 

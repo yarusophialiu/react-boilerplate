@@ -8,7 +8,7 @@
  */
 
 // import produce from 'immer';
-// import { CHANGE_USERNAME } from './constants';
+import { CHANGE_USERNAME } from './constants';
 
 // The initial state of the App
 export const initialState = {
@@ -27,20 +27,36 @@ export const initialState = {
 //     }
 //   });
 
-// const homeReducer = {
-//   ['DELETE_USER_SUCCESS']: (state, payload) => {
-//     const users = [...state.users.filter(user => user.id !== payload.id)];
-//     return { ...state, users: { ...state.pending, invite: false } };
-//   },
-// };
-
 // export default homeReducer;
 
 export default function homeReducer(state = initialState, action) {
+  // produce(state, draft => {
+  //   switch (action.type) {
+  //     case CHANGE_USERNAME:
+  //       // Delete prefixed '@' from the github username
+  //       draft.username = action.username.replace(/@/gi, '');
+  //       break;
+  //   }
+  // });
   switch (action.type) {
+    case CHANGE_USERNAME: {
+      return {
+        ...state,
+        username: action.username.replace(/@/gi, ''),
+      };
+    }
+
     case 'DELETE_USER_SUCCESS': {
       return [...state.users.filter(user => user.id !== action.payload.id)];
     }
+
+    case 'GET_USERS_SUCCESS': {
+      return {
+        ...state,
+        users: action.payload.data,
+      };
+    }
+
     default: {
       return state;
     }

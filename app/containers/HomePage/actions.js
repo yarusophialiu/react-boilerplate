@@ -15,7 +15,11 @@
  *    }
  */
 
-import { CHANGE_USERNAME, DELETE_USER_REQUEST } from './constants';
+import {
+  CHANGE_USERNAME,
+  DELETE_USER_REQUEST,
+  GET_USERS_REQUEST,
+} from './constants';
 
 /**
  * Changes the input field of the form
@@ -28,6 +32,12 @@ export function changeUsername(username) {
   return {
     type: CHANGE_USERNAME,
     username,
+  };
+}
+
+export function getUsersRequest() {
+  return {
+    type: GET_USERS_REQUEST,
   };
 }
 
