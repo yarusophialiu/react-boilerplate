@@ -4,7 +4,7 @@
  * This is the first thing users see of our App, at the '/' route
  */
 
-import React, { useEffect, memo } from 'react';
+import React, { useDispatch, useEffect, memo } from 'react';
 import PropTypes from 'prop-types';
 import { Helmet } from 'react-helmet';
 import { FormattedMessage } from 'react-intl';
@@ -45,11 +45,13 @@ export function HomePage({
   users,
   onSubmitForm,
   onChangeUsername,
-  ondeleteUserRequest,
+  // ondeleteUserRequest,
   ongetUsersRequest,
 }) {
   useInjectReducer({ key, reducer });
   useInjectSaga({ key, saga });
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
     ongetUsersRequest();
@@ -63,7 +65,8 @@ export function HomePage({
   }, []);
 
   const handleDeleteUserClick = userId => {
-    ondeleteUserRequest(userId);
+    dispatch(deleteUserRequest(userId));
+    // ondeleteUserRequest(userId);
   };
 
   const reposListProps = {
@@ -126,7 +129,7 @@ HomePage.propTypes = {
   makeSelectUsers: PropTypes.func,
   username: PropTypes.string,
   onChangeUsername: PropTypes.func,
-  ondeleteUserRequest: PropTypes.func,
+  // ondeleteUserRequest: PropTypes.func,
   ongetUsersRequest: PropTypes.func,
 };
 
@@ -146,7 +149,7 @@ export function mapDispatchToProps(dispatch) {
       if (evt !== undefined && evt.preventDefault) evt.preventDefault();
       dispatch(loadRepos());
     },
-    ondeleteUserRequest: userId => dispatch(deleteUserRequest(userId)),
+    // ondeleteUserRequest: userId => dispatch(deleteUserRequest(userId)),
     ongetUsersRequest: () => dispatch(getUsersRequest()),
   };
 }
